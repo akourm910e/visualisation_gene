@@ -100,6 +100,16 @@ def algoGraph(graph, viewLayout):
 
  # sont les sommets du rÃÂ©seau initial et les poids associÃÂ©s aux arÃÂªtes correspondent
  ##################################################################################### 
+def deleteZero(graph, tp):  
+  for m in graph.getNodes() :
+    myTp=[]
+    for i in tp:
+      myTp.append(i[m])
+    if all(x==0 for x in myTp):
+      graph.delNode(m)
+#        graph.delNode(m) 
+      
+    
 def completeGraph(graph):
   for n in graph.getNodes():
     for m in graph.getNodes():
@@ -109,25 +119,30 @@ def completeGraph(graph):
        
         if edges.isValid()==False:
           graph.addEdge(n,m)
-          print("inside")
+         
+
         
   
  
 def filtrateEdges(graph, tp):
- x =[]
- y =[]
- node1=[]
+ #selectionner nodes des genes non exprimes
+
+ #selectionner edges
  for n in graph.getEdges():
    source = graph.source(n)
    target = graph.target(n)
    node1=[]
+   node2=[]
    for i in tp:
      node1.append(i[source])
-     #y.append(i[target])
-   x.append(node1)
+     node2.append(i[target])
+     myWeight[n]=pearsonCoeff(node1, node2)
+     if (-0.2>myWeight[n]>0.2):
+       graph.delEdge(n)
      
-    
- print (x)
+   
+     
+
  
   
 ########### PEARSON CALCUL ##############
@@ -168,9 +183,6 @@ def pearsonCoeff(x, y):
    xdiff2 += xdiff * xdiff
   
    ydiff2 += ydiff * ydiff
-  
-
-
  return diffprod / math.sqrt(xdiff2 * ydiff2)
 
 
@@ -269,7 +281,9 @@ def main(graph):
  defineGraph(graph, Locus, viewLabel, viewColor, viewSize, Positive, Negative)
  algoGraph(graph, viewLayout)
  completeGraph(graph)
- 
+ deleteZero(graph, tp)
+# filtrateEdges(graph, tp)
+# 
 
 
 
